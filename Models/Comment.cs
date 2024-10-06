@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-class Comment {
+public class Comment {
     // models for table
     [Key]
     public int ID {get; set;}

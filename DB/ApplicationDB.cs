@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
-class ApplicationDB: DbContext {
-    public ApplicationDB(DbContextOptions applicationDB): base(applicationDB)
+public class ApplicationDB: DbContext {
+    public ApplicationDB(DbContextOptions<ApplicationDB> applicationDB): base(applicationDB)
     {
         
     }
