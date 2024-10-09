@@ -50,6 +50,63 @@ namespace api.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("CustomerModel", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerID"));
+
+                    b.Property<string>("CustomerFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("birthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("doctorModelDoctorID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerID");
+
+                    b.HasIndex("doctorModelDoctorID");
+
+                    b.ToTable("CustomerModels");
+                });
+
+            modelBuilder.Entity("DoctorModel", b =>
+                {
+                    b.Property<int>("DoctorID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorID"));
+
+                    b.Property<string>("DoctorFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DoctorLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("degreeCertificate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DoctorID");
+
+                    b.ToTable("doctorModels");
+                });
+
             modelBuilder.Entity("Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -91,6 +148,20 @@ namespace api.Migrations
                         .HasForeignKey("StockId");
 
                     b.Navigation("Stock");
+                });
+
+            modelBuilder.Entity("CustomerModel", b =>
+                {
+                    b.HasOne("DoctorModel", "doctorModel")
+                        .WithMany("CustomerModels")
+                        .HasForeignKey("doctorModelDoctorID");
+
+                    b.Navigation("doctorModel");
+                });
+
+            modelBuilder.Entity("DoctorModel", b =>
+                {
+                    b.Navigation("CustomerModels");
                 });
 
             modelBuilder.Entity("Stock", b =>
