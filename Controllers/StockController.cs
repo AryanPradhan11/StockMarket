@@ -26,4 +26,13 @@ public class StockController: ControllerBase {
 
         return Ok(stocks.ToStockDto());
     }
+
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateStockDto stockDto) {
+        var stockmodel = stockDto.ToStockFromCreateDto();
+        _context.Stocks.Add(stockmodel); // Add only tracks the data 
+        _context.SaveChanges();
+
+        return CreatedAtAction(nameof(GetByAll), new {id = stockmodel.Id}, stockmodel.ToStockDto());
+    }
 }

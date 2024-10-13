@@ -12,4 +12,16 @@ public static class StockMappers {
             MarketCap = stockModel.MarketCap
         };
     }
+
+    public static Stock ToStockFromCreateDto(this CreateStockDto stockDto) {
+        return new Stock {
+            Symbol = stockDto.Symbol,
+            CompanyName = stockDto.CompanyName,
+            Purchase = stockDto.Purchase,
+            Divident = stockDto.Divident,
+            Industry = stockDto.Industry,
+            MarketCap = stockDto.MarketCap
+
+        };
+    }
 }
