@@ -7,6 +7,8 @@ public class CustomerModel {
     public string CustomerLastName {get; set;} = string.Empty;
     public DateTime birthDate {get; set;}
 
+    public string password {get; set;} = string.Empty;
+
     public int? DoctorID {get; set;}
     public DoctorModel? doctorModel {get; set;}
 }

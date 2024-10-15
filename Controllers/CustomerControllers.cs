@@ -21,7 +21,7 @@ public class CustomerControllers : ControllerBase {
         return Ok(customer);
     }
 
-    [HttpGet("register")] 
+    [HttpGet("/register")] 
     public IActionResult RedirectUser() {
         return Redirect("http://localhost:5173/register");
     }
