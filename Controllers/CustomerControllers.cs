@@ -21,5 +21,17 @@ public class CustomerControllers : ControllerBase {
         return Ok(customer);
     }
 
-    
+    [HttpGet("register")] 
+    public IActionResult RedirectUser() {
+        return Redirect("http://localhost:5173/register");
+    }
+
+    [HttpPost("/login")]
+    public IActionResult Login ([FromBody] CustomerModel customerModel) {
+        if (customerModel.CustomerFirstName == "Aryan") {
+            return Ok(new {redirectUrl = "/login"});
+        } else {
+            return Unauthorized();
+        }
+    } 
 }
