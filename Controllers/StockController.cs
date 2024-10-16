@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 [Route("api/stocks")]
 [ApiController]
@@ -37,4 +38,24 @@ public class StockController: ControllerBase {
     }
 
     
+    [HttpPut]
+    [Route("{id}")]
+
+    public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockDto updatestocks) {
+        var stockUpdate = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+        if(stockUpdate == null) {
+            return NotFound();
+        }
+
+        stockUpdate.Purchase = updatestocks.Purchase;
+        stockUpdate.CompanyName = updatestocks.CompanyName;
+        stockUpdate.MarketCap = updatestocks.MarketCap;
+        stockUpdate.Divident = updatestocks.Divident;
+        stockUpdate.Industry = updatestocks.Industry;
+        stockUpdate.Symbol = updatestocks.Symbol;
+
+        _context.SaveChanges();
+        return Ok(stockUpdate.ToStockDto());
+    }
 }
