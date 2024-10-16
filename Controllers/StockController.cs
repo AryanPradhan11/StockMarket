@@ -35,4 +35,11 @@ public class StockController: ControllerBase {
 
         return CreatedAtAction(nameof(GetByAll), new {id = stockmodel.Id}, stockmodel.ToStockDto());
     }
+
+    [HttpGet]
+
+    public IActionResult Edit([FromBody] int id) {
+        var data = _context.Stocks.Where(x => x.Id == id).FirstOrDefault();
+        return Ok(data);
+    }
 }
