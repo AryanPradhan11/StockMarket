@@ -10,4 +10,6 @@ public class ApplicationDB: DbContext {
     public DbSet<Comment> Comments {get; set;}
     public DbSet<CustomerModel> Customer {get; set;}
     public DbSet<DoctorModel> Doctor {get; set;} 
+
+    public DbSet<User> Users {get; set;}
 }
