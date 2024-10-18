@@ -9,8 +9,5 @@ public class CustomerControllers : ControllerBase {
         _context = context;
     }
 
-    [HttpGet]
-    public IActionResult GetAll() {
-        var listallCustomer = _context.Customer.ToList().Select(s => s.)
-    }
+    
 }
