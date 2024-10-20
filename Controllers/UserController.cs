@@ -25,9 +25,10 @@ public class UserController: ControllerBase {
     //     return Ok(type.userFilter());
     // }
 
-    [HttpGet("{userType}")]
-    public IActionResult GetByType([FromRoute] string userType) {
-        var user = _context.Users.Where(x => x.userType == userType).ToList();
+    [HttpGet("{userName}")]
+    //userName is the route
+    public IActionResult GetByType([FromRoute] string userName) {
+        var user = _context.Users.Where(x => x.userName == userName).ToList();
         if (user == null) {
             return NotFound();
         }
@@ -38,7 +39,9 @@ public class UserController: ControllerBase {
     public IActionResult Create([FromBody] CreateCustomerDto Customer) {
         var customers = Customer.createCustomer();
         _context.Users.Add(customers);
-
-        return CreatedAtAction(nameof(GetByType), new {name = Customer.userName}, customers.userFilter());
+        _context.SaveChanges();
+        // nameof ensure the correct name of GetByType,
+        // userName is the route from GetByType and we are passing the userName to it
+        return CreatedAtAction(nameof(GetByType), new {userName = Customer.userName}, customers);
     }
 }
