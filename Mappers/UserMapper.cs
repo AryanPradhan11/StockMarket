@@ -8,4 +8,12 @@ public static class UserMapper {
             userType = userModel.userType
         };
     }
+
+    public static User createCustomer(this CreateCustomerDto customerDto) {
+        return new User {
+            userName = customerDto.userName,
+            userType = customerDto.userType
+        };
+    }
 }
+
