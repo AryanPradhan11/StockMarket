@@ -34,5 +34,11 @@ public class UserController: ControllerBase {
         return Ok(user);
     }
 
-    
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateCustomerDto Customer) {
+        var customers = Customer.createCustomer();
+        _context.Users.Add(customers);
+
+        return CreatedAtAction(nameof(GetByType), new {name = Customer.userName}, customers.userFilter());
+    }
 }
