@@ -45,6 +45,9 @@ public class StockController: ControllerBase {
 
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockDto updatestocks) {
         var stockUpdate = await _stockRepo.UpdateStockAsync(id, updatestocks);
+        if(stockUpdate == null) {
+            return NotFound();
+        }
         return Ok(stockUpdate.ToStockDto());
     }
 
