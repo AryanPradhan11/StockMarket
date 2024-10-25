@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 [ApiController]
 public class UserController: ControllerBase {
     private readonly ApplicationDB _context;
-    private readonly IStockRepo _userRepo;
+    private readonly IUserRepo _userRepo;
 
-    public UserController(ApplicationDB context, IStockRepo userRepo) {
+    public UserController(ApplicationDB context, IUserRepo userRepo) {
         _context = context;
         _userRepo = userRepo;
     }
@@ -16,8 +16,8 @@ public class UserController: ControllerBase {
 
     [HttpGet]
 
-    public IActionResult GetAll() {
-        var listUser = _context.Users.ToList().Select(s => s.userFilter());
+    public async Task<IActionResult> GetAll() {
+        var listUser = await _userRepo.GetAllUsersAsync();
         return Ok(listUser);
     }
 
@@ -44,21 +44,22 @@ public class UserController: ControllerBase {
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCustomerDto Customer) {
-        var customers = Customer.createCustomer();
-        await _context.Users.AddAsync(customers);
-        await _context.SaveChangesAsync();
+        var customers = await _userRepo.CreateAsyncUser(Customer);
+        
         // nameof ensure the correct name of GetByType,
         // userName is the route from GetByType and we are passing the userName to it
         return CreatedAtAction(nameof(GetByType), new {userName = Customer.userName}, customers);
     }
 
-    [HttpGet]
-    [Route("/getall")]
-    public async Task<IActionResult> GetByAsync() {
-        var users = await _userRepo.GetAllAsync();
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, UpdateUserDto updateUserDto) {
+        var updating_user = await _userRepo.UpdateAsyncUser(id, updateUserDto);
+        if(updating_user == null) {
+            return null;
+        }
 
-        var usersDTO = users.Select(s => s.userFilter());
-
-        return Ok (users);
+        return Ok(updating_user.userFilter());
     }
+
 }
