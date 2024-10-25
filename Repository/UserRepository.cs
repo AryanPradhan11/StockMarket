@@ -1,56 +1,39 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
-public class UserRepository: IStockRepo {
-
+public class UserRepository : IUserRepo {
     private readonly ApplicationDB _context;
+
     public UserRepository(ApplicationDB context)
     {
         _context = context;
     }
-    public Task<List<User>> GetAllAsync() {
-        return _context.Users.ToListAsync();
+
+    public async Task<List<User>> GetAllUsersAsync() {
+        var userList = await _context.Users.ToListAsync();
+        return userList;
     }
 
-    public Task<List<Stock>> GetStocksAsync() {
-        return _context.Stocks.ToListAsync();
-    }
-
-    public async Task<Stock?> CreateStockAsync(Stock stockmodel) {
-        await _context.Stocks.AddAsync(stockmodel); // Add only tracks the data 
+    public async Task<User?> CreateAsyncUser(CreateCustomerDto createCustomerDto) {
+        var CreateCustomer = createCustomerDto.createCustomer();
+        await _context.Users.AddAsync(CreateCustomer);
         await _context.SaveChangesAsync();
-        return stockmodel;
+
+        return CreateCustomer;
     }
 
-    public async Task<Stock?> UpdateStockAsync(int id, UpdateStockDto updateStockDto) {
-    var existing = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id); // Ensure using FirstOrDefaultAsync
-
-    if(existing == null) {
-        return null; // Correctly returning null for non-existing stock
-    }
-
-    // Updating the properties of existing Stock
-    existing.Symbol = updateStockDto.Symbol;
-    existing.CompanyName = updateStockDto.CompanyName;
-    existing.Purchase = updateStockDto.Purchase;
-    existing.Industry = updateStockDto.Industry;
-    existing.MarketCap = updateStockDto.MarketCap;
-
-    await _context.SaveChangesAsync(); // Save changes asynchronously
-
-    return existing; // Returning the updated Stock
-    }
-
-
-    public async Task<Stock?> DeleteStockAsync(int id) {
-        var deleteStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
-        if(deleteStock == null) {
+    public async Task<User?> UpdateAsyncUser(int id, UpdateUserDto updateUserDto) {
+        var updateUser = await _context.Users.FirstOrDefaultAsync(x => x.userID == id);
+        if(updateUser == null) {
             return null;
         }
 
-        _context.Stocks.Remove(deleteStock);
+        updateUser.userID = updateUserDto.userId;
+        updateUser.userName = updateUserDto.userName;
+        updateUser.userType = updateUserDto.userType;
+
         await _context.SaveChangesAsync();
-        return deleteStock;
+        return updateUser;
     }
 }
-
-// repos are to pre-heat the oven before bringing in the database
