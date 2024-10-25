@@ -75,11 +75,15 @@ namespace api.Migrations
                     b.Property<int?>("doctorModelDoctorID")
                         .HasColumnType("int");
 
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CustomerID");
 
                     b.HasIndex("doctorModelDoctorID");
 
-                    b.ToTable("CustomerModels");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("DoctorModel", b =>
@@ -104,7 +108,7 @@ namespace api.Migrations
 
                     b.HasKey("DoctorID");
 
-                    b.ToTable("doctorModels");
+                    b.ToTable("Doctor");
                 });
 
             modelBuilder.Entity("Stock", b =>
@@ -139,6 +143,27 @@ namespace api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Stocks");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<int>("userID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("userID"));
+
+                    b.Property<string>("userName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("userID");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Comment", b =>
