@@ -6,10 +6,13 @@ using Microsoft.EntityFrameworkCore;
 [ApiController]
 public class UserController: ControllerBase {
     private readonly ApplicationDB _context;
+    private readonly IStockRepo _userRepo;
 
-    public UserController(ApplicationDB context) {
+    public UserController(ApplicationDB context, IStockRepo userRepo) {
         _context = context;
+        _userRepo = userRepo;
     }
+
 
     [HttpGet]
 
@@ -52,7 +55,7 @@ public class UserController: ControllerBase {
     [HttpGet]
     [Route("/getall")]
     public async Task<IActionResult> GetByAsync() {
-        var users = await _context.Users.ToListAsync();
+        var users = await _userRepo.GetAllAsync();
 
         var usersDTO = users.Select(s => s.userFilter());
 
