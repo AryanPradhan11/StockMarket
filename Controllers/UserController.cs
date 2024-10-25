@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 [Route("hospital/userList")]
 [ApiController]
@@ -27,8 +28,10 @@ public class UserController: ControllerBase {
 
     [HttpGet("{userName}")]
     //userName is the route
-    public IActionResult GetByType([FromRoute] string userName) {
-        var user = _context.Users.Where(x => x.userName == userName).ToList();
+    public async Task<IActionResult> GetByType([FromRoute] string userName) {
+        var user = await _context.Users.ToListAsync();
+
+        var awaiting_user = user.Where(x => x.userName == userName);
         if (user == null) {
             return NotFound();
         }
@@ -36,12 +39,22 @@ public class UserController: ControllerBase {
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateCustomerDto Customer) {
+    public async Task<IActionResult> Create([FromBody] CreateCustomerDto Customer) {
         var customers = Customer.createCustomer();
-        _context.Users.Add(customers);
-        _context.SaveChanges();
+        await _context.Users.AddAsync(customers);
+        await _context.SaveChangesAsync();
         // nameof ensure the correct name of GetByType,
         // userName is the route from GetByType and we are passing the userName to it
         return CreatedAtAction(nameof(GetByType), new {userName = Customer.userName}, customers);
+    }
+
+    [HttpGet]
+    [Route("/getall")]
+    public async Task<IActionResult> GetByAsync() {
+        var users = await _context.Users.ToListAsync();
+
+        var usersDTO = users.Select(s => s.userFilter());
+
+        return Ok (users);
     }
 }
