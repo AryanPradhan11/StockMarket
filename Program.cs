@@ -21,6 +21,14 @@ builder.Services.AddScoped<IUserRepo, UserRepository>();
 builder.Services.AddScoped<IStockRepo, StockRepository>();
 builder.Services.AddScoped<ICommentRepo, CommentRepository>();
 
+
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowReactApp", 
+        policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+    );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowReactApp");
 
 app.UseHttpsRedirection();
 
